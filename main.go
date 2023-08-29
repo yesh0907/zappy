@@ -2,13 +2,17 @@ package main
 
 import (
 	"log"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gofiber/fiber/v2"
 	_ "github.com/joho/godotenv/autoload"
 	"zappy.sh/database"
+	"zappy.sh/middleware"
 	"zappy.sh/routes"
 )
+
+var authMiddleware *middleware.AuthMiddleware
 
 func setUpRoutes(app *fiber.App, handler *routes.Handler) {
 	app.Get("/", func(c *fiber.Ctx) error {
@@ -20,7 +24,11 @@ func setUpRoutes(app *fiber.App, handler *routes.Handler) {
 
 	app.Get("/:alias", handler.GetAlias)
 	app.Post("/alias/create", handler.CreateAlias)
-	app.Get("/requests/:alias", handler.AllRequests)
+	app.Get("/requests/:alias", authMiddleware.Middleware, handler.AllRequests)
+}
+
+func setupMiddleware() {
+	authMiddleware = middleware.NewAuthMiddleware(os.Getenv("API_KEY"))
 }
 
 func main() {
@@ -29,6 +37,9 @@ func main() {
 
 	// Start fiber app
 	app := fiber.New()
+
+	// Set up middleware
+	setupMiddleware()
 
 	// Handle routes
 	handler := routes.NewHandler()

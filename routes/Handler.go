@@ -100,6 +100,7 @@ func (h *Handler) CreateAlias(c *fiber.Ctx) error {
 }
 
 func (h *Handler) AllRequests(c *fiber.Ctx) error {
+
 	aliasName := strings.ToLower(c.Params("alias"))
 
 	if aliasName == "" {
