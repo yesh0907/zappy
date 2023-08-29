@@ -5,7 +5,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gofiber/fiber/v2"
-	"github.com/joho/godotenv"
+	_ "github.com/joho/godotenv/autoload"
 	"zappy.sh/database"
 	"zappy.sh/routes"
 )
@@ -24,12 +24,6 @@ func setUpRoutes(app *fiber.App, handler *routes.Handler) {
 }
 
 func main() {
-	// Load .env file
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
 	// Connect to database
 	database.ConnectDB()
 
