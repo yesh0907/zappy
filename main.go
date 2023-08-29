@@ -46,5 +46,5 @@ func main() {
 	})
 
 	// Listen on port 8080
-	log.Fatal(app.Listen(":8080"))
+	log.Fatal(app.Listen("0.0.0.0:8080"))
 }
