@@ -26,17 +26,27 @@ func NewHandler() *Handler {
 func (h *Handler) GetAlias(c *fiber.Ctx) error {
 	name := strings.ToLower(c.Params("alias"))
 	userId := strings.ToLower(c.Query("id"))
+	source := strings.ToLower(c.Query("source"))
 
 	req := new(models.Request)
 
 	req.AliasName = name
 	req.IP = c.IP()
 	req.UserAgent = c.Get("User-Agent")
-	req.Referer = c.Get("Referer")
 
 	if userId != "" {
 		req.UserId = userId
 	}
+
+	if source != "" {
+		req.Referer = source
+	}
+
+	// Set headers to not cache response
+	c.Set("Cache-Control", "no-cache, no-store, must-revalidate")
+	c.Set("Pragma", "no-cache")
+	// Set headers to expire immediately
+	c.Set("Expires", "0")
 
 	alias, err := h.AliasRepository.GetAlias(name)
 
