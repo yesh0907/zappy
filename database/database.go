@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"zappy.sh/models"
 )
@@ -16,11 +16,8 @@ var (
 
 func ConnectDB() {
 	var err error
-	dsn := fmt.Sprintf("%s&parseTime=True", os.Getenv("DSN"))
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
-		DisableForeignKeyConstraintWhenMigrating: true,
-		TranslateError:                           true,
-	})
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=require", os.Getenv("PGHOST"), os.Getenv("PGUSER"), os.Getenv("PGPASSWORD"), os.Getenv("PGDATABASE"), os.Getenv("PGPORT"))
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
 		log.Fatal("Failed to connect to db: ", err)
@@ -29,7 +26,7 @@ func ConnectDB() {
 
 	log.Println("Connected to database")
 
-	if err := db.AutoMigrate(&models.Request{}, &models.Alias{}); err != nil {
+	if err := db.AutoMigrate(&models.Alias{}, &models.Request{}); err != nil {
 		log.Fatal("Failed to migrate db: ", err)
 	}
 

@@ -2,6 +2,7 @@ package routes
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -31,7 +32,7 @@ func (h *Handler) GetAlias(c *fiber.Ctx) error {
 	req := new(models.Request)
 
 	req.AliasName = name
-	req.IP = c.IP()
+	req.IP = fmt.Sprintf("ip: %s, x-forwarded-by: %s, fly-client-ip: %s", c.IP(), c.Get("X-Forwarded-For"), c.Get("Fly-Client-IP"))
 	req.UserAgent = c.Get("User-Agent")
 
 	if userId != "" {
