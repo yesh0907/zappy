@@ -1,5 +1,7 @@
 # Zappy.sh - my personal URL shortner
 
+### [CLI Repo](https://github.com/yesh0907/zappy-cli)
+
 ### Motivation
 I built this for fun to learn how to create my own REST APIs in Go and have a useful tool for myself
 
